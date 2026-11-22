@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Monitor - Bulb Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-bolt"></i>
+            <h1>Volt Vista</h1>
+        </div>
+        <nav>
+            <a href="#dashboard" class="nav-active"><i class="fas fa-gauge"></i> Dashboard</a>
+            <a href="#bulbs"><i class="fas fa-lightbulb"></i> Bulbs</a>
+            <a href="#nilm-section"><i class="fas fa-brain"></i> Smart Recognition</a>
+            <a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="#predictions"><i class="fas fa-robot"></i> Predictions</a>
+        </nav>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="container">
+        <!-- Real-time Metrics -->
+        <section id="dashboard" class="dashboard-section">
+            <h2 class="section-title">
+                <i class="fas fa-gauge-high"></i> Live Power Monitor
+                <span class="live-badge">
+                    <i class="fas fa-circle"></i> LIVE
+                </span>
+            </h2>
+            
+            <div class="metrics-grid">
+                <!-- Voltage Card -->
+                <div class="metric-card voltage">
+                    <div class="metric-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Voltage</h3>
+                        <p class="metric-value" id="voltageVal">0 V</p>
+                        <span class="metric-trend" id="voltageStatus">No Supply</span>
+                    </div>
+                </div>
+
+                <!-- Current Card -->
+                <div class="metric-card current">
+                    <div class="metric-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Current</h3>
+                        <p class="metric-value" id="currentVal">0 A</p>
+                        <span class="metric-trend">When Bulb ON</span>
+                    </div>
+                </div>
+
+                <!-- Power Card -->
+                <div class="metric-card power">
+                    <div class="metric-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Power</h3>
+                        <p class="metric-value" id="powerVal">0 W</p>
+                        <span class="metric-trend">When Bulb ON</span>
+                    </div>
+                </div>
+
+                <!-- Status Card -->
+                <div class="metric-card status">
+                    <div class="metric-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Connected Bulbs</h3>
+                        <p class="metric-value" id="connectedBulbs">0</p>
+                        <span class="metric-trend" id="bulbStatus">All OFF</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bulbs Monitoring Section -->
+        <section id="bulbs" class="bulbs-section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i> Bulb Monitoring
+                <span class="live-badge">
+                    <i class="fas fa-circle"></i> REAL-TIME
+                </span>
+            </h2>
+            
+            <div class="bulbs-grid">
+                <!-- Bulb 1 -->
+                <div class="bulb-card">
+                    <h3>Bulb 1</h3>
+                    <div class="bulb off" id="bulb1">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="bulb-info">
+                        <div class="bulb-power">40W</div>
+                        <div class="bulb-status">
+                            <span class="status-indicator status-off"></span>
+                            <span id="bulb1Status">OFF</span>
+                        </div>
+                        <div class="bulb-consumption" id="bulb1Power">0W</div>
+                    </div>
+                </div>
+
+                <!-- Bulb 2 -->
+                <div class="bulb-card">
+                    <h3>Bulb 2</h3>
+                    <div class="bulb off" id="bulb2">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="bulb-info">
+                        <div class="bulb-power">60W</div>
+                        <div class="bulb-status">
+                            <span class="status-indicator status-off"></span>
+                            <span id="bulb2Status">OFF</span>
+                        </div>
+                        <div class="bulb-consumption" id="bulb2Power">0W</div>
+                    </div>
+                </div>
+
+                <!-- Bulb 3 -->
+                <div class="bulb-card">
+                    <h3>Bulb 3</h3>
+                    <div class="bulb off" id="bulb3">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="bulb-info">
+                        <div class="bulb-power">100W</div>
+                        <div class="bulb-status">
+                            <span class="status-indicator status-off"></span>
+                            <span id="bulb3Status">OFF</span>
+                        </div>
+                        <div class="bulb-consumption" id="bulb3Power">0W</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Configuration -->
+            <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <h3 style="margin-bottom: 1rem; color: white;">
+                    <i class="fas fa-info-circle"></i> Current Configuration
+                </h3>
+                <div id="currentConfig" style="color: #ccc; font-size: 1.1rem;">
+                    No bulbs are currently ON. Turn on bulbs from ESP32 Serial Monitor.
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced NILM Section -->
+        <section id="nilm-section" class="nilm-section">
+            <div class="container">
+                <h2>🧠 Smart Appliance Recognition (UK-DALE Dataset)</h2>
+                
+                <!-- Dataset Upload Section -->
+                <div class="nilm-info">
+    <h3>🔍 Real-time Appliance Detection</h3>
+    <p>System automatically detects appliances based on power consumption patterns</p>
+</div>
+
+                <div class="nilm-container">
+                    <!-- Real-time Power Graph -->
+                    <div class="power-graph">
+                        <h3>📊 Real-time Power Signature</h3>
+                        <canvas id="powerSignatureChart"></canvas>
+                    </div>
+
+                    <!-- Appliance Detection Results -->
+                    <div class="appliance-results">
+                        <h3>🔍 Detected Appliances</h3>
+                        <div id="applianceList" class="appliance-list">
+                            <div class="appliance-item">Upload dataset to start detection</div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="nilm-controls">
+                        <button id="trainModel" class="btn btn-warning">
+                            <i class="fas fa-brain"></i> Train Model
+                        </button>
+                        <button id="startMonitoring" class="btn btn-primary" disabled>
+                            <i class="fas fa-play"></i> Start Monitoring
+                        </button>
+                        <button id="stopMonitoring" class="btn btn-secondary" disabled>
+                            <i class="fas fa-stop"></i> Stop Monitoring
+                        </button>
+                        <button id="analyzeData" class="btn btn-success" disabled>
+                            <i class="fas fa-chart-line"></i> Analyze Pattern
+                        </button>
+                    </div>
+
+                    <!-- Model Status -->
+                    <div class="model-status">
+                        <h4>Model Status: <span id="modelStatus">Waiting for dataset...</span></h4>
+                        <div class="progress">
+                            <div id="modelProgress" class="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Dataset Statistics -->
+                    <div id="datasetStats" class="dataset-stats" style="display: none;">
+                        <h4>📈 Dataset Statistics</h4>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Samples</span>
+                                <span class="stat-value" id="statSamples">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Appliances</span>
+                                <span class="stat-value" id="statAppliances">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Avg Power</span>
+                                <span class="stat-value" id="statAvgPower">0W</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Date Range</span>
+                                <span class="stat-value" id="statDateRange">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENHANCED ANALYTICS SECTION -->
+        <section id="analytics" class="analytics-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i> Energy Analytics & Historical Data
+            </h2>
+            
+            <!-- MAIN CONSUMPTION CHART - YAHAN ADD KIYA HAI -->
+            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                <canvas id="consumptionChart" height="200"></canvas>
+            </div>
+            
+            <div class="analytics-controls">
+                <div class="time-filter">
+                    <button class="time-btn active" data-period="24h">24 Hours</button>
+                    <button class="time-btn" data-period="7d">7 Days</button>
+                    <button class="time-btn" data-period="30d">30 Days</button>
+                </div>
+                <div class="export-controls">
+                    <button class="export-btn" id="exportData">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <!-- Power Consumption Over Time -->
+                <div class="chart-card">
+                    <h3><i class="fas fa-bolt"></i> Power Consumption Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="powerTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Daily Usage Pattern -->
+                <div class="chart-card">
+                    <h3><i class="fas fa-clock"></i> Daily Usage Pattern</h3>
+                    <div class="chart-container">
+                        <canvas id="dailyPatternChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cost Analysis -->
+                <div class="chart-card">
+                    <h3><i class="fas fa-money-bill-wave"></i> Cost Analysis</h3>
+                    <div class="chart-container">
+                        <canvas id="costAnalysisChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Appliance Usage Breakdown -->
+                <div class="chart-card full-width">
+                    <h3><i class="fas fa-pie-chart"></i> Appliance Usage Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="applianceUsageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Summary -->
+            <div class="stats-summary">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Total Consumption</h4>
+                        <p class="stat-value" id="totalConsumption">0 kWh</p>
+                        <span class="stat-change" id="consumptionChange">+0%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Total Cost</h4>
+                        <p class="stat-value" id="totalCost">₹0</p>
+                        <span class="stat-change" id="costChange">+0%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Carbon Footprint</h4>
+                        <p class="stat-value" id="carbonFootprint">0 kg</p>
+                        <span class="stat-change" id="carbonChange">+0%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Peak Usage</h4>
+                        <p class="stat-value" id="peakUsage">0 W</p>
+                        <span class="stat-change" id="peakTime">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PREDICTIONS SECTION -->
+        <section id="predictions" class="predictions-section">
+            <h2 class="section-title">
+                <i class="fas fa-robot"></i> Energy Predictions & AI Analytics
+            </h2>
+            
+            <div class="predictions-grid">
+                <!-- Monthly Bill Prediction -->
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h3>Monthly Bill Forecast</h3>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="prediction-value" id="predictedBill">₹0</div>
+                        <div class="prediction-label">Estimated Monthly Cost</div>
+                        <div class="prediction-details">
+                            <div class="detail-item">
+                                <span>Daily Avg:</span>
+                                <span id="dailyAvg">0 kWh</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Monthly Total:</span>
+                                <span id="monthlyTotal">0 kWh</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Rate:</span>
+                                <span>₹6.5/unit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usage Trends -->
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Usage Trends</h3>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="trend-indicator" id="trendIndicator">
+                            <i class="fas fa-equals"></i>
+                            <span>Stable</span>
+                        </div>
+                        <div class="trend-chart">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                        <div class="prediction-label">7-Day Consumption Pattern</div>
+                    </div>
+                </div>
+
+                <!-- Energy Savings Tips -->
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Smart Tips</h3>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="tips-list">
+                            <div class="tip-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Turn off unused bulbs to save <strong>₹120/month</strong></span>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-sun"></i>
+                                <span>Use natural light during day</span>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Peak hours: 6PM-10PM (Higher rates)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Prediction Chart -->
+            <div class="detailed-chart-card">
+                <h3 style="color: var(--dark); margin-bottom: 1rem;">
+                    <i class="fas fa-chart-bar"></i> 30-Day Consumption Forecast
+                </h3>
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <canvas id="forecastChart" height="120"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section class="instructions-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i> How to Use
+            </h2>
+            <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div style="text-align: center;">
+                        <i class="fas fa-bolt" style="font-size: 3rem; color: #ffeb3b; margin-bottom: 1rem;"></i>
+                        <h3 style="color: white; margin-bottom: 1rem;">1. Supply Voltage</h3>
+                        <p style="color: #ccc;">Connect AC supply to see voltage reading</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <i class="fas fa-lightbulb" style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;"></i>
+                        <h3 style="color: white; margin-bottom: 1rem;">2. Control Bulbs</h3>
+                        <p style="color: #ccc;">Use ESP32 Serial Monitor to turn bulbs ON/OFF</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; color: #2196F3; margin-bottom: 1rem;"></i>
+                        <h3 style="color: white; margin-bottom: 1rem;">3. Monitor Power</h3>
+                        <p style="color: #ccc;">Watch real-time current and power consumption</p>
+                    </div>
+                </div>
+                
+                <!-- ESP32 Commands -->
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                    <h4 style="color: white; margin-bottom: 1rem;">
+                        <i class="fas fa-terminal"></i> ESP32 Serial Commands:
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; color: #ccc;">
+                        <div><code>b1on</code> - Bulb 1 ON</div>
+                        <div><code>b1off</code> - Bulb 1 OFF</div>
+                        <div><code>b2on</code> - Bulb 2 ON</div>
+                        <div><code>b2off</code> - Bulb 2 OFF</div>
+                        <div><code>b3on</code> - Bulb 3 ON</div>
+                        <div><code>b3off</code> - Bulb 3 OFF</div>
+                        <div><code>allon</code> - All ON</div>
+                        <div><code>alloff</code> - All OFF</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Status -->
+        <section class="status-section">
+            <h2 class="section-title">
+                <i class="fas fa-heart-pulse"></i> System Status
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <i class="fas fa-wifi" style="font-size: 2rem; color: #4CAF50; margin-bottom: 1rem;"></i>
+                    <h3 style="color: white;">ESP32 Connection</h3>
+                    <p id="esp32Status" style="color: #4CAF50; font-weight: bold;">Connected</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <i class="fas fa-database" style="font-size: 2rem; color: #2196F3; margin-bottom: 1rem;"></i>
+                    <h3 style="color: white;">Backend API</h3>
+                    <p id="apiStatus" style="color: #2196F3; font-weight: bold;">Running</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <i class="fas fa-clock" style="font-size: 2rem; color: #ff9800; margin-bottom: 1rem;"></i>
+                    <h3 style="color: white;">Last Update</h3>
+                    <p id="lastUpdate" style="color: #ff9800; font-weight: bold;">Never</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>Powered by ESP32 & FastAPI | Real-time Bulb Monitoring System</p>
+            <p class="footer-credits">
+                Made with <i class="fas fa-heart" style="color: #e91e63;"></i> for Smart Energy Management
+            </p>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        
+        <p>Connecting to ESP32...</p>
+    </div>
+
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
